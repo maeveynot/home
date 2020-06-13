@@ -1,0 +1,19 @@
+#!/bin/sh
+
+interpreter="$(which "$1")"; shift
+
+case "$interpreter" in
+    /usr/bin/sh) interpreter="/bin/sh";;
+    /usr/bin/*|/bin/*) ;;
+    *) interpreter="/usr/bin/env $(basename "$interpreter")";;
+esac
+
+for file; do
+    if test ! -e "$file"; then
+        printf '#!%s\n\n' "$interpreter" > "$file"
+        chmod +x "$file"
+        if test -t 0; then
+            ${EDITOR:-vi} "$file"
+        fi
+    fi
+done
