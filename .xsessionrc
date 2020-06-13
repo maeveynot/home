@@ -1,0 +1,2 @@
+. ~/.profile
+test -f ~/.xsessionrc.local && . ~/.xsessionrc.local
