@@ -1,0 +1,17 @@
+gtk-key-theme-name = "Emacs"
+
+binding "gtk-emacs-entry-extra" {
+  bind "<alt>BackSpace" { "delete-from-cursor" (word-ends, -1) }
+}
+
+class "GtkEntry" binding "gtk-emacs-entry-extra"
+class "GtkTextView" binding "gtk-emacs-entry-extra"
+
+style "xfce-tasklist-style"
+{
+  XfceTasklist::max-button-length = 2560
+  XfceTasklist::max-button-size = 48
+  XfceTasklist::minimized-icon-lucency = 50
+  XfceTasklist::menu-max-width-chars = 240
+}
+class "XfceTasklist" style "xfce-tasklist-style"
