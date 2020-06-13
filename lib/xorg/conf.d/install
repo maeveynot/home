@@ -1,0 +1,9 @@
+#!/bin/sh
+
+dest='/usr/share/X11/xorg.conf.d'
+
+for conf in *.conf; do
+    if ! [ -L "$dest/$conf" ]; then
+        sudo ln -s "$PWD/$conf" "$dest"
+    fi
+done
