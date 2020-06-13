@@ -1,0 +1,18 @@
+#!/bin/sh -e
+
+default_branch="$(git db)"
+
+git remote | while read -r remote; do
+    git remote prune "$remote"
+done
+
+git branch --merged "$default_branch" --no-contains "$default_branch" --format '%(refname:short)' | while read -r branch; do
+    git branch --delete "$branch"
+done
+
+git gc
+
+if git branch --no-merged | grep -q .; then
+    echo "The following branches are still unmerged:"
+    git --no-pager branch -vv
+fi
