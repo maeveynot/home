@@ -1,0 +1,34 @@
+#!/usr/bin/python3
+
+import sys
+import getopt
+import urllib.parse
+
+if __name__ == "__main__":
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "dn", ["decode", "no-plus"])
+    except getopt.GetoptError as err:
+        print('uri-enc: %s' % err, file=sys.stderr)
+        sys.exit(2)
+
+    decode = False
+    plus = True
+    for o, a in opts:
+        if o in ("-d", "--decode"):
+            decode = True
+        if o in ("-n", "--no-plus"):
+            plus = False
+
+    if decode:
+        if plus:
+            transform = urllib.parse.unquote_plus
+        else:
+            transform = urllib.parse.unquote
+    else:
+        if plus:
+            transform = urllib.parse.quote_plus
+        else:
+            transform = urllib.parse.quote
+
+    for url in args:
+        print(transform(url))
