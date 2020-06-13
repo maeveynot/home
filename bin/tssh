@@ -1,0 +1,11 @@
+#!/bin/sh
+
+first_host="$1"; shift
+pane="$(tmux new-window -P ssh "$first_host")"
+
+for host; do
+    tmux split-pane -t "$pane" ssh "$host"
+    tmux select-layout -t "$pane" tiled
+done
+
+tmux set -t "$pane" synchronize-panes on
