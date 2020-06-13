@@ -1,0 +1,14 @@
+#!/bin/sh
+
+export GITHUB_USER="$1"; shift
+export GIT_AUTHOR_EMAIL="$1"; shift
+
+if test -n "$GITHUB_USER" -a -n "$GIT_AUTHOR_EMAIL"; then
+    git clone \
+        --config user.github="$GITHUB_USER" \
+        --config user.email="$GIT_AUTHOR_EMAIL" \
+        "$@"
+else
+    echo "usage: git clone-as GITHUB_USER EMAIL [git clone args...]" 1>&2
+    exit 2
+fi
