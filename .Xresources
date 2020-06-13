@@ -1,0 +1,148 @@
+#include ".Xresources.local"
+
+#define TextFG rgb:00/00/00
+#define TextBG rgb:ff/ff/ff
+#define TermBG rgb:fa/fa/fa
+#define PanelBG rgb:f6/f6/f6
+#define ButtonBG rgb:ea/ea/ea
+#define DarkBG rgb:2b/2b/2b
+
+#define SmallFont -*-lucida-medium-r-*-*-10-*-*-*-*-*-iso10646-1
+#define DefFont -*-lucida-medium-r-*-*-12-*-*-*-*-*-iso10646-1
+#define BoldFont -*-lucida-bold-r-*-*-12-*-*-*-*-*-iso10646-1
+#define ItalFont -*-lucida-medium-i-*-*-12-*-*-*-*-*-iso10646-1
+#define MonoFont -*-lucidatypewriter-medium-r-*-*-12-*-*-*-*-*-iso10646-1
+#define MonoBdFont -*-lucidatypewriter-bold-r-*-*-12-*-*-*-*-*-iso10646-1
+#define HugeFont -*-lucida-medium-r-*-*-24-*-*-*-*-*-iso10646-1
+
+#define XftFont Ubuntu Mono
+#define RegularPx 15
+#define BigPx 20
+#define LittlePx 10
+
+/* Xft */
+
+Xft.antialias: true
+Xft.hinting: true
+Xft.hintstyle: hintfull
+
+/* XTerm */
+
+XTerm.VT100.geometry: 80x24
+XTerm.VT100.internalBorder: 4
+XTerm.VT100.scrollBar: true
+XTerm.VT100.rightScrollBar: true
+XTerm.VT100.saveLines: 10000
+XTerm.VT100.metaSendsEscape: true
+XTerm.VT100.pointerMode: 0
+XTerm.VT100.colorBDMode: true
+
+XTerm.VT100.font: MonoFont
+RegularXTerm.VT100.faceName: XftFont:pixelsize=RegularPx
+BigXTerm.VT100.faceName: XftFont:pixelsize=BigPx
+LittleXTerm.VT100.faceName: XftFont:pixelsize=LittlePx
+LittleXTerm.VT100.scrollBar: false
+ClusterTerm.transient: true
+ClusterTerm.VT100.scrollBar: false
+
+XTerm.VT100.Scrollbar.background: gray50
+XTerm.VT100.Scrollbar.foreground: gray72
+
+XTerm.VT100.background: #363251
+XTerm.VT100.foreground: #dcdcdc
+XTerm.VT100.colorBD: #ebebeb
+XTerm.VT100.colorUL: #ebebeb
+
+XTerm.VT100.color0: #3f3f3f
+XTerm.VT100.color1: #705050
+XTerm.VT100.color2: #60b48a
+XTerm.VT100.color3: #dfaf8f
+XTerm.VT100.color4: #9ab8d7
+XTerm.VT100.color5: #dc8cc3
+XTerm.VT100.color6: #8cd0d3
+XTerm.VT100.color7: #dcdcdc
+
+XTerm.VT100.color8: #709080
+XTerm.VT100.color9: #dca3a3
+XTerm.VT100.color10: #72d5a3
+XTerm.VT100.color11: #f0dfaf
+XTerm.VT100.color12: #94bff3
+XTerm.VT100.color13: #ec93d3
+XTerm.VT100.color14: #93e0e3
+XTerm.VT100.color15: #ffffff
+
+/* Athena */
+
+*international: true
+
+*shapeStyle: Rectangle
+*Command.shapeStyle: Rectangle
+*beNiceToColormap: False
+*topShadowContrast: 15
+*bottomShadowContrast: 15
+
+*shadowWidth: 1
+*highlightThickness: 1
+*Label.shadowWidth: 1
+*Label.borderWidth: 1
+
+*Scrollbar.foreground: DarkBG
+*Form.borderColor: DarkBG
+*Label.borderColor: DarkBG
+*internalBorderColor: DarkBG
+
+*Box.background: PanelBG
+*Dialog.background: PanelBG
+*Form.background: PanelBG
+*Label.background: PanelBG
+*Paned.background: PanelBG
+*Panner.background: PanelBG
+*SimpleMenu.background: PanelBG
+
+*Command.background: ButtonBG
+*MenuButton.background: ButtonBG
+*Repeater.background: ButtonBG
+*Toggle.background: ButtonBG
+*Scrollbar.background: ButtonBG
+*Panner.foreground: ButtonBG
+
+*TextSink.background: TextBG
+*AsciiSink.background: TextBG
+*FontGrid.background: TextBG
+*Ghostview.background: TextBG
+*List.background: TextBG
+*Porthole.background: TextBG
+*RgbSink.background: TextBG
+*RgbText.background: TextBG
+*ScrollByLine.background: TextBG
+*Text.background: TextBG
+*Tree.background: TextBG
+*Viewport.background: TextBG
+
+*TextSink.font: DefFont
+*MultiSink.font: DefFont
+*AsciiSink.font: DefFont
+*Command.font: DefFont
+*Label.font: DefFont
+*List.font: DefFont
+*MenuButton.font: DefFont
+*RgbSink.font: MonoFont
+*SmeBSB.font: DefFont
+*Toggle.font: DefFont
+
+*TextSink.fontSet: DefFont
+*MultiSink.fontSet: DefFont
+*AsciiSink.fontSet: DefFont
+*Command.fontSet: DefFont
+*Label.fontSet: DefFont
+*List.fontSet: DefFont
+*MenuButton.fontSet: DefFont
+*RgbSink.fontSet: MonoFont
+*SmeBSB.fontSet: DefFont
+*Toggle.fontSet: DefFont
+
+*Paned.Text.translations: #override\n\
+    None <Btn4Down>,<Btn4Up>: previous-page()\n\
+    None <Btn5Down>,<Btn5Up>: next-page()\n\
+    Shift <Btn4Down>,<Btn4Up>: scroll-one-line-down()\n\
+    Shift <Btn5Down>,<Btn5Up>: scroll-one-line-up()
