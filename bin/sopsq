@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# This exists only because the syntax for --extract is extremely cumbersome.
+
+query="$1"; shift
+
+for file; do
+    sops --decrypt --output-type json "$file" | jq -r "$query"
+done
