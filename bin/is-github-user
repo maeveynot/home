@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# When doing an initial clone, set GITHUB_USER in the environment.
+# To not have to set this on every fetch/push, run `git config --set
+# user.github your-user-name`.
+
+test "${GITHUB_USER:-$(git config --get user.github)}" = "$1"
