@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=MacGuffin2
+Comment=Run m2 wrapper in a terminal
+Type=Application
+Icon=dialog-password-symbolic
+Exec=xfce4-terminal --geometry 48x2 --title MacGuffin2 -e 'm2 getactivewindow windowminimize'
+Path=
+Terminal=false
+StartupNotify=false

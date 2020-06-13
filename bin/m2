@@ -1,0 +1,15 @@
+#!/bin/sh
+
+get_m2_args() {
+    wait-for-winsize 10
+    rlwrap -S 'm2> ' -w 0 -H ~/.m2_history -s 10000 -D 2 -o cat
+}
+
+password="$(macguffin2 $(get_m2_args))"
+
+xdotool - <<EOF
+getactivewindow
+windowunmap
+selectwindow
+type --window %1 $password
+EOF
