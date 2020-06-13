@@ -1,0 +1,15 @@
+vo=vdpau
+
+use-filename-title=1
+
+font="Noto Sans"
+subfont-osd-scale=2.5
+subfont-text-scale=2.5
+subfont-outline=1
+
+stop-xscreensaver=1
+heartbeat-cmd="xscreensaver-command -deactivate >&-"
+heartbeat-interval=270
+
+nojoystick=1
+nolirc=1
