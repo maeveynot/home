@@ -1,0 +1,103 @@
+[init]
+	templateDir = ~/.config/git/default-branch-name
+[core]
+	excludesfile = ~/.gitignore.global
+	pager = less -S
+[user]
+	name = Maeve Andrews
+	email = maeve@git.mail.maeveandrews.com
+[alias]
+	st = status --short --branch --untracked-files=all
+	br = branch
+	ba = branch --all
+	# current ref
+	cr = rev-parse --abbrev-ref HEAD
+	# current branch
+	cb = symbolic-ref --short HEAD
+	# default branch
+	db = !sh -c 'git rev-parse --abbrev-ref \"${1:-origin}/HEAD\" | sed \"s@^${1:-origin}/@@\"' -
+	co = checkout
+	# checkout new
+	cn = !sh -c 'git checkout -b \"$1\" \"$(git db)\"' -
+	ds = diff --patch-with-stat
+	dc = diff --patch-with-stat --cached
+	dn = diff --name-only
+	lo = log --pretty='tformat:%C(139)%h %C(30)%ad %C(170)%aN%C(reset): %s%C(137)%d'
+	lp = lo --patch
+	lr = lo --patch --reverse
+	lg = lo --graph
+	la = lo --graph --all
+	ci = commit
+	ca = "!sh -c 'if git diff --cached --quiet --exit-code; then git commit --all \"$@\"; else echo \"Already staged! Use git ci.\"; fi' -"
+	cp = cherry-pick
+	mn = merge --no-ff
+	ff = merge --ff-only
+	po = push origin
+	ph = push origin HEAD
+	pr = pull --rebase
+	# pull and merge
+	pm = pull
+	# ff to origin
+	fo = !git ff \"origin/$(git cb)\"
+	# list unmerged
+	um = !sh -c 'git ls-files --unmerged \"$@\" | cut -f2 | sort -u' -
+	# edit unmerged
+	eu = !sh -c 'git um \"$@\" | xargs $EDITOR' -
+	# add unmerged
+	au = "!sh -c 'git um \"$@\" | while read f; do egrep -q \"^[<=>]{7}\" \"$f\" || git add \"$f\"; done; git st' -"
+	rb = rebase
+	ri = rebase --interactive
+	rc = rebase --continue
+	rs = rebase --skip
+	ra = rebase --abort
+	ur = "!sh -c 'git update-ref \"refs/heads/$1\" \"$2\"' -"
+	# background ff (destructive; perhaps we should just use fetch && ur. also this is a weird way of avoiding stash)
+	bf = !sh -c 'git checkout --quiet --detach && git fetch origin \"$1:$1\" && git checkout --quiet -' -
+	su = submodule update
+[log]
+	date = format:%F %T
+	mailmap = true
+[mailmap]
+	file = ~/.mailmap
+[column]
+	ui = never
+[color]
+	branch = auto
+	diff = auto
+	interactive = auto
+	status = auto
+	ui = auto
+[color "branch"]
+	current = 12
+	local = 13
+	remote = 11
+[color "diff"]
+	commit = 13
+	meta = 12
+	old = 9
+	new = 10
+	whitespace = magenta reverse
+	frag = yellow
+[color "interactive"]
+	prompt = blue
+	header = magenta
+	help = green
+[color "status"]
+	added = green
+	changed = magenta
+	untracked = cyan
+[diff]
+	noprefix = true
+	renames = true
+[push]
+	default = nothing
+[rebase]
+	autosquash = true
+[rerere]
+	enabled = true
+
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f

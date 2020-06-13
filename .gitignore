@@ -1,0 +1,106 @@
+# Home directory layout
+data
+notes/personal
+opt
+projects/contrib
+projects/maeve
+projects/world
+scratch/[0-9]*
+src
+tmp
+work
+
+# Development workstation stuff
+.Codefresh
+.android
+.aws
+.bundle
+.cargo
+.cfconfig
+.docker
+.gem
+.gsutil
+.kube
+.node-gyp
+.nodenv
+.npm
+.npm-packages
+.packer.d
+.rbenv
+.rustup
+.siege
+.terraform.d
+.vagrant.d
+.virtualenvs
+.emacs.d/elpa
+
+# Standard XDG directories
+.cache
+.config
+.fonts
+.local
+.thumbnails
+Desktop
+Documents
+Downloads
+Music
+Pictures
+Public
+Templates
+Videos
+
+# Ubuntu directories
+snap
+
+# Third-party directories
+Steam
+VirtualBox VMs
+
+# Other non-free software
+.MakeMKV
+.nv
+
+# Dotfiles that need to be handled privately
+.aws/credentials
+.awssecret
+.curlicue
+.gnupg
+.peach-session
+.pki
+.ssh
+.thunderbird
+
+# Local dotfiles that we source
+.Xresources.local
+.profile.local
+.shrc.local*
+
+# Other non-interesting dotfiles
+.ICEauthority
+.Xdefaults
+.audacity-data
+.dbus
+.dmrc
+.dvdcss
+.fontconfig
+.gimp-*
+.mozilla
+.pulse-cookie
+.steam
+.steampath
+.steampid
+.stepmania-*
+.sudo_as_admin_successful
+.rnd
+.wget-hsts
+.w3m
+.xscreensaver
+
+# Transient files
+.*_history
+.Xauthority
+.lesshst
+.xfce4-session.verbose-log
+.xfce4-session.verbose-log.last
+.xsel.log
+.xsession-errors*
