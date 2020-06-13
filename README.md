@@ -22,8 +22,11 @@ time, so I'm attempting to keep track of other steps in `~/notes/setup`.
 use this repository unmodified. If you would like to crib any parts of
 it for your own use, though, the ISC license is below.)
 
- 1. Generate a SSH keypair for GitHub access on the new machine and
-    associate it with my GitHub account. Add it to ssh-agent.
+ 1. [Generate a SSH
+    keypair](https://raw.githubusercontent.com/maeveynot/home/HEAD/bin/gen-ssh-key)
+    for GitHub access on the new machine (`gen-ssh-key github
+    github.com/maeveynot`) and associate it with my GitHub account. Add
+    it to ssh-agent.
  2. Clone this repository to a temporary directory (this will attempt to
     use any key in the agent, since `.ssh/config` does not exist yet).
  3. Move all contents of the temporary directory, including `.git`, into

@@ -1,0 +1,16 @@
+#!/bin/sh
+
+file_part="$1"
+comment_part="$2"
+key_type="${3:-ed25519}"
+
+if test -z "$file_part" -o -z "$comment_part"; then
+    echo "usage: gen-ssh-key FILE_PART COMMENT_PART [KEY_TYPE]" 1>&2
+    exit 2
+fi
+
+file="${HOME}/.ssh/id_${key_type}_${file_part}_$(date +%Y)"
+comment="$(whoami)@$(hostname):$(date +%Y-%m-%d):${comment_part}"
+
+ssh-keygen -t "$key_type" -f "$file" -C "$comment"
+cat "${file}.pub"
