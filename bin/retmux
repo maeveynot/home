@@ -1,0 +1,23 @@
+#!/bin/bash
+
+declare -a ssh_args
+declare -a tmux_args
+declare -n cur_args='ssh_args'
+
+for arg; do
+    if [[ "$arg" == -- ]]; then
+        declare -n cur_args='tmux_args'
+    else
+        cur_args+=("$arg")
+    fi
+done
+
+# Must explicitly specify a session for `new-session -A` to attach
+default_session='0'
+tmux_cmd=(tmux new-session -A -s "$default_session" -E "${tmux_args[@]}")
+
+if (( ${#ssh_args[@]} )); then
+    exec ssh -t "${ssh_args[@]}" "${tmux_cmd[@]}"
+else
+    exec "${tmux_cmd[@]}"
+fi
