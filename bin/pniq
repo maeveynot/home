@@ -1,0 +1,11 @@
+#!/usr/bin/perl -w
+
+use strict;
+use Getopt::Std;
+
+sub uniq { my %seen; grep { !$seen{$_}++ } @_ }
+sub rniq { reverse uniq reverse @_ }
+
+my %opts;
+getopts("r", \%opts);
+print $opts{r} ? rniq <> : uniq <>
