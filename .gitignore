@@ -32,7 +32,10 @@ work
 .terraform.d
 .vagrant.d
 .virtualenvs
+.emacs.d/auto-save-list
 .emacs.d/elpa
+.emacs.d/lisp/local-init.el
+.emacs.d/local-state
 
 # Standard XDG directories
 .cache
