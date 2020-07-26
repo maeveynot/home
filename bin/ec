@@ -1,3 +1,11 @@
 #!/bin/sh
 
+# If vipe reopens stdout to /dev/tty, emacsclient fails, and sometimes
+# crashes emacs. It seems like this is Linux-specific:
+#
+# https://github.com/emacs-mirror/emacs/blob/emacs-26.3/src/term.c#L3988
+#
+# Allow using `export TTY=$(tty)` in shell init as a workaround.
+
+test -n "$TTY" && exec <"$TTY" >"$TTY"
 exec emacsclient -c -a '' "$@"
