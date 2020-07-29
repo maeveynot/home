@@ -1,6 +1,15 @@
+#command
 \en  forw-screen
 \ep  back-screen
 n    repeat-search
 p    reverse-search
 N    repeat-search-all
 P    reverse-search-all
+
+#line-edit
+^P   up
+^N   down
+^B   left
+^F   right
+^A   home
+^E   end
