@@ -1,0 +1,17 @@
+# The wonderful thing about standards is that there's so many to choose from.
+xterm-truecolor|xterm with 24-bit color,
+  use=xterm-256color,
+# tmux
+  setrgbb=\E[48;2;%p1%d;%p2%d;%p3%dm,
+  setrgbf=\E[38;2;%p1%d;%p2%d;%p3%dm,
+# emacs
+  setb24=\E[48;2;%p1%{65536}%/%d;%p1%{256}%/%{255}%&%d;%p1%{255}%&%dm,
+  setf24=\E[38;2;%p1%{65536}%/%d;%p1%{256}%/%{255}%&%d;%p1%{255}%&%dm,
+tmux-truecolor|tmux with 24-bit color,
+  use=tmux-256color,
+# tmux (if you want nest multiple instances, I suppose)
+  setrgbb=\E[48;2;%p1%d;%p2%d;%p3%dm,
+  setrgbf=\E[38;2;%p1%d;%p2%d;%p3%dm,
+# emacs
+  setb24=\E[48;2;%p1%{65536}%/%d;%p1%{256}%/%{255}%&%d;%p1%{255}%&%dm,
+  setf24=\E[38;2;%p1%{65536}%/%d;%p1%{256}%/%{255}%&%d;%p1%{255}%&%dm,
