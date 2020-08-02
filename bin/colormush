@@ -1,0 +1,128 @@
+#!/usr/bin/env ruby
+# coding: utf-8
+
+require 'optparse'
+
+
+# see https://en.wikipedia.org/wiki/HSL_and_HSV#From_RGB
+# figure 3b from #Basic_principle is helpful for the vector stuff
+
+def rgb_to_hsv(r, g, b)
+  v = [r, g, b].max
+  c = v - [r, g, b].min
+  h = case
+    when c == 0; 0
+    when v == r; 60 * (0 + (g - b) / c)
+    when v == g; 60 * (2 + (b - r) / c)
+    when v == b; 60 * (4 + (r - g) / c)
+  end
+  s = v == 0 ? 0 : c / v
+  [h, s, v]
+end
+
+def hsv_to_rgb(h, s, v)
+  h /= 60
+  c = s * v
+  x = c * (1 - (h % 2 - 1).abs)
+  rgb = case h.to_i
+    when 0; [c, x, 0]
+    when 1; [x, c, 0]
+    when 2; [0, c, x]
+    when 3; [0, x, c]
+    when 4; [x, 0, c]
+    when 5; [c, 0, x]
+  end
+  rgb.map {|f| f + v - c }
+end
+
+def polar_vec_to_rect(theta, r, z)
+  [r * Math.cos(theta), r * Math.sin(theta), z]
+end
+
+def polar_vec_mean(vecs)
+  x, y, z = vecs.collect {|vec| polar_vec_to_rect(*vec) }
+                .reduce {|sum, xyz| sum.zip(xyz).map(&:sum) }
+                .collect {|sum| sum / vecs.size }
+  [Math.atan2(y, x), Math.sqrt(x ** 2 + y ** 2), z]
+end
+
+def hsv_to_polar_vec(h, s, v)
+  [h * Math::PI / 180, s, v]
+end
+
+def polar_vec_to_hsv(theta, r, z)
+  [theta * 180 / Math::PI % 360, r, z]
+end
+
+def hsv_mean_clamped(hsvs)
+  pvecs = hsvs.map {|hsv| hsv_to_polar_vec(*hsv) }
+  h, s, v = polar_vec_to_hsv(*polar_vec_mean(pvecs))
+  s, v = [s/v, 1] if v > 1
+  v, s = [v/s, 1] if s > 1
+  [h, s, v]
+end
+
+def rgb_hex_to_adjusted_hsv(hex_parts)
+  h, s, v = rgb_to_hsv(*hex_parts.map {|h| h.to_i(16) / 255.0 })
+  h = (h + $rotate_h) % 360
+  s = (s * $scale_s).clamp(0, 1)
+  v = (v * $scale_v).clamp(0, 1)
+  [h, s, v]
+end
+
+def to_bytes(floats)
+  floats.map {|f| (f * 255).round }
+end
+
+def fmt_rgb_hex(*rgb)
+  '#%02x%02x%02x' % to_bytes(rgb)
+end
+
+def fmt_rgb_terminal_fancy(*rgb)
+  "\x1b[38;2;%d;%d;%dm██████████\x1b[0m " % to_bytes(rgb)
+end
+
+def fmt_hsv(h, s, v)
+  'hsv(%.1f, %.1f%%, %.1f%%)' % [h, s * 100, v * 100]
+end
+
+
+$rotate_h = 0
+$scale_s = 1
+$scale_v = 1
+$output_style = :filter
+$output_format = :rgb
+OptionParser.new do |opts|
+  opts.on("-h DEGREES", Float, "Adjust hue") {|n| $rotate_h = n }
+  opts.on("-s SCALE", Float, "Scale saturation") {|n| $scale_s = n}
+  opts.on("-v SCALE", Float, "Scale value") {|n| $scale_v = n }
+  opts.on("-n", "Don't convert back from HSV") { $output_format = :hsv }
+  opts.on("-a", "Output average of colors on line") { $output_style = :mean }
+end.parse!
+
+RGB_HEX = /#(\h{2})(\h{2})(\h{2})/
+
+ARGF.each_line do |ln|
+  ln.chomp!
+  case $output_style
+  when :filter
+    ln.gsub!(RGB_HEX) do |rgb_hex|
+      hsv = rgb_hex_to_adjusted_hsv([$1, $2, $3])
+      fmt_rgb_hex(*hsv_to_rgb(*hsv))
+    end
+    puts ln
+  when :mean
+    hsvs = ln.scan(RGB_HEX).map do |rgb_hex|
+      rgb_hex_to_adjusted_hsv(rgb_hex)
+    end
+    mean_hsv = hsv_mean_clamped(hsvs)
+    mean_rgb = hsv_to_rgb(*mean_hsv)
+    print fmt_rgb_terminal_fancy(*mean_rgb) if STDOUT.tty?
+    case $output_format
+    when :rgb
+      puts fmt_rgb_hex(*mean_rgb)
+    when :hsv
+      puts fmt_hsv(*mean_hsv)
+    end
+  end
+end
