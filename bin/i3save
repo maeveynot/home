@@ -1,0 +1,5 @@
+#!/bin/sh
+
+layout_dir="$HOME/.config/i3/layouts"
+mkdir -p "$layout_dir"
+i3-save-tree > "$layout_dir/$*.json"

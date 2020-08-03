@@ -1,0 +1,3 @@
+#!/bin/sh
+
+kitty -o initial_window_width=720 -o initial_window_height=80 -e m2

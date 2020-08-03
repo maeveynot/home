@@ -1,0 +1,4 @@
+#!/bin/sh
+
+xbacklight -time 100 "$@"
+notify-send -i display-brightness-symbolic -t 500 "$(printf '%.1f' "$(xbacklight -get)")%"

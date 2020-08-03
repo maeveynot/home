@@ -1,0 +1,28 @@
+#!/bin/sh
+
+layout_dir="$HOME/.config/i3/layouts"
+
+any_files() {
+    for dir; do
+        for file in "$dir"/*; do
+            test -f "$file" && return 0
+        done
+    done
+    return 1
+}
+
+verb="$1"; shift
+case "$verb" in
+    desktop)
+        i3-dmenu-desktop --dmenu=i3dmenu;;
+    terminal)
+        prog="$(dmenu_path | i3dmenu "$@")"
+        test -n "$prog" && exec i3-sensible-terminal -e sh -c "$prog";;
+    layout)
+        if any_files "$layout_dir"; then
+            layout="$(ls "$layout_dir" | i3dmenu "$@")"
+            i3-msg append_layout "$layout_dir/$layout"
+        else
+            i3-nagbar -m "No layouts found in $layout_dir"
+        fi;;
+esac

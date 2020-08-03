@@ -1,0 +1,3 @@
+#!/bin/sh
+
+dmenu -i -fn 'Ubuntu-16' -nb '#39344b' -nf '#d5ccff' "$@"

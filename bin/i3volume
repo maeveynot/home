@@ -1,0 +1,15 @@
+#!/bin/sh
+
+result="$(amixer -D pulse sset Master "$1" | egrep -o -m 1 '\[[0-9]*%\] \[(on|off)\]$' | tr -d '[]')"
+vol="${result% *}"
+state="${result#* }"
+
+case "$vol:$state" in
+    mute:off|toggle:off) icon='muted'; msg='Muted';;
+    unmute:on|toggle:on) icon='medium'; msg="Unmuted ($vol)";;
+    *:off|off) icon='low'; msg="$vol (muted)";;
+    *:on|on) icon='low'; msg="Volume: $vol";;
+    *) icon='medium'; msg="$vol, State: $state";;
+esac
+
+notify-send -i "audio-volume-${icon}-symbolic" -t 1000 "$msg"

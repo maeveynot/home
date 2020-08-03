@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if xlsclients | grep -q .; then
+    i3-nagbar -t warning -m 'Running clients exist; exit anyway?' -B Yes 'i3-msg exit' -b No 'pkill i3-nagbar' "$@"
+else
+    i3-msg exit
+fi

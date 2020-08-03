@@ -1,0 +1,67 @@
+general {
+    interval = 1
+    colors = true
+    output_format = i3bar
+    markup = pango
+    color_good = "#889d9e"
+    color_degraded = "#c393ab"
+}
+
+order = {
+  "load",
+  "cpu_temperature all",
+  "disk /",
+  "disk /home",
+  "battery icon",
+  "battery text",
+  "time",
+}
+
+load {
+    format = ""
+    format_above_threshold = "<span foreground='#c393ab'>%1min %5min %15min</span>"
+    max_threshold = 1
+}
+
+cpu_temperature all {
+    format = ""
+    format_above_threshold = "%degrees °C"
+    max_threshold = 50
+    path = "/sys/class/thermal/thermal_zone0/temp"
+}
+
+disk "/" {
+    format = ""
+    format_below_threshold = "root: %avail (%percentage_used)"
+    low_threshold = 20
+}
+
+disk "/home" {
+    format = ""
+    format_below_threshold = "home: %avail (%percentage_used)"
+    low_threshold = 20
+}
+
+battery icon {
+    # sigh. text rendering is broken, if emoji and text are in the same
+    # block it pushes the baseline up by 1px or so. separate blocks it is
+    format = "%status"
+    status_chr = "⚡"
+    status_bat = "🔋"
+    status_full = "🔌"
+    status_unk = "🔌"
+}
+
+battery text {
+    format = "%percentage %remaining"
+    status_chr = ""
+    status_bat = ""
+    status_full = ""
+    status_unk = ""
+    low_threshold = 20
+}
+
+time {
+    # NOTE: markup requires i3status newer than 2.13! See https://github.com/i3/i3status/pull/430
+    format = "<span foreground='#d2cde4'>%A, %d %b</span> <b><span foreground='#ffffff'>%T</span></b>"
+}

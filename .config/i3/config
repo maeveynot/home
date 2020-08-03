@@ -1,0 +1,212 @@
+set $mod Mod4
+set $alt Mod1
+set $ctl Control
+
+floating_modifier $mod
+workspace_layout default
+focus_wrapping yes
+
+set $font pango:Ubuntu 9
+set $bs 2
+default_border pixel $bs
+hide_edge_borders smart
+
+# Do not bind:
+# - $mod+c (is reserved for user bindings)
+# - $mod+g (used to cancel out of prefix maps^W^Wbinding modes)
+
+# To be implemented:
+# - $mod+a, $mod+e (first/last sibling)
+# - $mod+u (universal argument)
+
+# Probably not going to be used:
+# - r (rev-i-search, but what are we searching for? have plans for dmenu con list already)
+# - z (i don't see how suspend maps onto anything at all. leave free.)
+
+bindsym $mod+h split h
+bindsym $mod+v split v
+# if there's only one con in a ws and i switch to tabbed or stacking, i
+# want the tabs to show up *before* i create a second con. this means we
+# have to keep track of which con got a special border to undo it later.
+# (hmm, maybe i no longer need this with con path in i3bifocals title)
+bindsym $mod+l layout toggle split; [con_mark=__border] border pixel $bs; unmark __border
+bindsym $mod+t layout tabbed; border normal $bs; mark __border
+bindsym $mod+s layout stacking; border normal $bs; mark __border
+
+bindsym $mod+n focus down
+bindsym $mod+p focus up
+bindsym $mod+b focus left
+bindsym $mod+f focus right
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Left focus left
+bindsym $mod+Right focus right
+
+bindsym $mod+shift+n move down
+bindsym $mod+shift+p move up
+bindsym $mod+shift+b move left
+bindsym $mod+shift+f move right
+bindsym $mod+shift+Down focus down
+bindsym $mod+shift+Up focus up
+bindsym $mod+shift+Left focus left
+bindsym $mod+shift+Right focus right
+
+bindsym $mod+slash focus mode_toggle
+bindsym $mod+apostrophe floating toggle
+bindsym $mod+comma border toggle $bs
+bindsym $mod+period sticky toggle
+
+bindsym $mod+minus resize shrink height 24 px or 4 ppt
+bindsym $mod+equal resize grow height 24 px or 4 ppt
+
+bindsym $mod+j exec --no-startup-id "i3-sensible-terminal"
+bindsym $mod+m exec --no-startup-id "i3run terminal"
+
+# input keysyms appear to be decomposed into a keycode and modifier, and
+# then the keycode is translated back to a symbol, meaning e.g. colon is
+# spelled shift+semicolon, etc.
+#
+# (anyway i should write i3repl, this program sucks)
+bindsym $mod+shift+semicolon exec --no-startup-id "i3-input"
+
+# goes with mod-x mod-x below
+bindsym $mod+space mark _mark
+
+bindsym $mod+x mode "mod-x"
+mode "mod-x" {
+    bindsym 0 layout stacked; exec --no-startup-id "i3-sensible-terminal"; mode "default"
+    bindsym 1 fullscreen toggle; mode "default"
+    bindsym 2 split v; exec --no-startup-id "i3-sensible-terminal"; mode "default"
+    bindsym 3 split h; exec --no-startup-id "i3-sensible-terminal"; mode "default"
+    # 5 might make sense as yet another map, for ws operations
+
+    bindsym k kill; mode "default"
+    # kind of questionable
+    bindsym f exec --no-startup-id "i3-input -F 'resize set width %s'"; mode "default"
+
+    # child is like narrow
+    bindsym n focus child; mode "default"
+    bindsym p focus parent; mode "default"
+
+    bindsym $mod+c exec --no-startup-id "i3exit -f '$font'"; mode "default"
+    # a stretch but okay. what's restart tho. i don't think there is anything
+    bindsym $mod+e reload; mode "default"
+
+    bindsym $mod+i exec --no-startup-id "i3run layout"; mode "default"
+    bindsym $mod+w exec --no-startup-id "i3-input -F \"exec --no-startup-id i3save '%s'\" -P 'Save tree: '"; mode "default"
+
+    # the focus here is needed in case _mark was on another workspace (it's a no-op otherwise)
+    bindsym $mod+x mark _point; swap with mark _mark; [con_mark=_point] focus; mode "default"
+
+    # things that would be nice...
+    # b = con switch w/ dmenu
+    # h = focus this whole ws (that's not a primitive)
+    # o = other con!!!!!!! (suppose i have to implement that myself too)
+    # mod-t = swap with sibling (a theme is developing)
+    # tab, \, etc? some kind of arranging?
+
+    # d = open a file manager of some sort
+    # m = start a mail client
+    # g = browser??? eww doesn't global map this but it maps shift-g inside itself
+
+    # don't really use these tbh, but for completeness
+    bindsym shift+bracketleft resize shrink width 200 px or 10 ppt; mode "default"
+    bindsym shift+bracketright resize grow width 200 px or 10 ppt; mode "default"
+    bindsym minus resize shrink height 200 px or 10 ppt; mode "default"
+    bindsym shift+6 resize grow height 200 px or 10 ppt; mode "default"
+
+    bindsym $mod+g mode "default"
+    bindsym $ctl+g mode "default"
+}
+
+bindsym $mod+c mode "mod-c"
+mode "mod-c" {
+    bindsym u exec --no-startup-id "xterm -name PasswordEntry +sb -geom 60x2 -e m2"; mode "default"
+    bindsym p exec --no-startup-id "pavucontrol"; mode "default"
+    bindsym s exec --no-startup-id "xfce4-screenshooter"; mode "default"
+
+    bindsym $mod+g mode "default"
+    bindsym $ctl+g mode "default"
+}
+
+bindsym $mod+Tab workspace back_and_forth
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+bindsym $ctl+$mod+f workspace next
+bindsym $ctl+$mod+b workspace prev
+bindsym $mod+k move scratchpad
+bindsym $mod+y scratchpad show
+
+bindsym $mod+w mode "workspace"
+mode "workspace" {
+    bindsym 1 move container to workspace number 1; mode "default"
+    bindsym 2 move container to workspace number 2; mode "default"
+    bindsym 3 move container to workspace number 3; mode "default"
+    bindsym 4 move container to workspace number 4; mode "default"
+    bindsym 5 move container to workspace number 5; mode "default"
+    bindsym 6 move container to workspace number 6; mode "default"
+    bindsym 7 move container to workspace number 7; mode "default"
+    bindsym 8 move container to workspace number 8; mode "default"
+    bindsym 9 move container to workspace number 9; mode "default"
+    bindsym $mod+1 move container to workspace number 1; mode "default"
+    bindsym $mod+2 move container to workspace number 2; mode "default"
+    bindsym $mod+3 move container to workspace number 3; mode "default"
+    bindsym $mod+4 move container to workspace number 4; mode "default"
+    bindsym $mod+5 move container to workspace number 5; mode "default"
+    bindsym $mod+6 move container to workspace number 6; mode "default"
+    bindsym $mod+7 move container to workspace number 7; mode "default"
+    bindsym $mod+8 move container to workspace number 8; mode "default"
+    bindsym $mod+9 move container to workspace number 9; mode "default"
+
+    bindsym Escape mode "default"
+}
+
+font $font
+client.focused #56497a #3a2d5f #cccccc #6644c3 #3a2d5f
+client.focused_inactive #333333 #605f6a #ffffff #494850 #605f6a
+client.unfocused #333333 #222222 #888888 #29292e #222222
+client.urgent #332f3a #907800 #ffffff #907800 #907800
+client.placeholder #000000 #0c0c0c #ffffff #000000 #0c0c0c
+client.background #000000
+
+bar {
+    status_command "i3status"
+    position top
+    tray_output primary
+    tray_padding 6
+    separator_symbol " ∕ "
+    colors {
+        background #2a2738
+        statusline #a9a1c9
+        separator #47415f
+    }
+}
+
+bindsym $mod+Return exec --no-startup-id "i3run desktop"
+bindsym $mod+shift+Return exec --no-startup-id "i3run terminal"
+bindsym $mod+$ctl+Return exec --no-startup-id "i3-sensible-terminal"
+
+# TODO:
+# XF86AudioMicMute
+# XF86Display
+# not XF86WLAN (already a kill switch)
+# XF86Bluetooth
+# XF86Tools
+bindsym XF86MonBrightnessDown exec --no-startup-id "i3backlight -dec 5"
+bindsym XF86MonBrightnessUp exec --no-startup-id "i3backlight -inc 5"
+bindsym XF86AudioLowerVolume exec --no-startup-id "i3volume 5%-"
+bindsym XF86AudioRaiseVolume exec --no-startup-id "i3volume 5%+"
+bindsym XF86AudioMute exec --no-startup-id "i3volume toggle"
+
+for_window [instance=PasswordEntry] floating enable, border pixel $bs, move position center
+for_window [instance=pavucontrol] floating enable
+for_window [title="Event Tester"] floating enable
+for_window [instance=ffplay] floating enable
+for_window [class=MPlayer] floating enable
