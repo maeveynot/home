@@ -15,12 +15,12 @@
 #define MonoBdFont -*-lucidatypewriter-bold-r-*-*-12-*-*-*-*-*-iso10646-1
 #define HugeFont -*-lucida-medium-r-*-*-24-*-*-*-*-*-iso10646-1
 
-#define XftFont Ubuntu Mono
-#define RegularPx 15
-#define BigPx 20
-#define LittlePx 10
-
-/* Xft */
+#ifndef XftFont
+#define XftFont Noto Sans
+#endif
+#ifndef XftMonoFont
+#define XftMonoFont Noto Sans Mono
+#endif
 
 Xft.antialias: true
 Xft.hinting: true
@@ -37,13 +37,13 @@ XTerm.VT100.metaSendsEscape: true
 XTerm.VT100.pointerMode: 0
 XTerm.VT100.colorBDMode: true
 
-XTerm.VT100.font: MonoFont
-RegularXTerm.VT100.faceName: XftFont:pixelsize=RegularPx
-BigXTerm.VT100.faceName: XftFont:pixelsize=BigPx
-LittleXTerm.VT100.faceName: XftFont:pixelsize=LittlePx
-LittleXTerm.VT100.scrollBar: false
-ClusterTerm.transient: true
-ClusterTerm.VT100.scrollBar: false
+XTerm.VT100.faceName: xft:XftMonoFont:pixelsize=24
+XTerm.VT100.font1: xft:XftMonoFont:pixelsize=12
+XTerm.VT100.font2: xft:XftMonoFont:pixelsize=18
+XTerm.VT100.font3: xft:XftMonoFont:pixelsize=24
+XTerm.VT100.font4: xft:XftMonoFont:pixelsize=30
+XTerm.VT100.font5: xft:XftMonoFont:pixelsize=36
+XTerm.VT100.font6: xft:XftMonoFont:pixelsize=42
 
 XTerm.VT100.Scrollbar.background: gray50
 XTerm.VT100.Scrollbar.foreground: gray72
