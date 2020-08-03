@@ -1,3 +1,4 @@
+gtk-font-name = "Ubuntu 8"
 gtk-key-theme-name = "Emacs"
 
 binding "gtk-emacs-entry-extra" {
