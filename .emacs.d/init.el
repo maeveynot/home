@@ -164,6 +164,31 @@
 
 ;; ---------------------------------------------------------------------------
 
+(setq frame-title-format
+      `(,(invocation-name) "@" ,(system-name) ": %["
+        (buffer-file-name "%f" (dired-directory dired-directory "%b"))
+        "%] %*"))
+
+;; i couldn't get either term/xterm.el or the xterm-title.el on
+;; emacswiki to work, so just do it ourselves :-( at least it's simpler?
+
+(defun send-xterm-osc (cs text)
+  (send-string-to-terminal (concat "\033]" cs ";" text "\007")))
+
+(defun xterm-title-update ()
+  (let ((icon-name (buffer-name))
+        (window-title (format-mode-line frame-title-format)))
+    (send-xterm-osc "1" icon-name)
+    (send-xterm-osc "2" window-title)))
+
+;; this trades being always 100% up to date for efficiency
+;; TODO: find a hook that will run on entering/exiting recursive edit
+
+(add-hook 'buffer-list-update-hook 'xterm-title-update)
+(add-hook 'first-change-hook 'xterm-title-update)
+
+;; ---------------------------------------------------------------------------
+
 (defmacro when-bound (form)
   `(when (fboundp ',(car form))
      ,form))
