@@ -64,7 +64,7 @@ end
 
 def rgb_hex_to_adjusted_hsv(hex_parts)
   h, s, v = rgb_to_hsv(*hex_parts.map {|h| h.to_i(16) / 255.0 })
-  h = (h + $rotate_h) % 360
+  h = $set_h ? $set_h : (h + $rotate_h) % 360
   s = (s * $scale_s).clamp(0, 1)
   v = (v * $scale_v).clamp(0, 1)
   [h, s, v]
@@ -87,6 +87,7 @@ def fmt_hsv(h, s, v)
 end
 
 
+$set_h = false
 $rotate_h = 0
 $scale_s = 1
 $scale_v = 1
@@ -94,6 +95,7 @@ $output_style = :filter
 $output_format = :rgb
 OptionParser.new do |opts|
   opts.on("-h DEGREES", Float, "Adjust hue") {|n| $rotate_h = n }
+  opts.on("-H DEGREES", Float, "Set hue") {|n| $set_h = n }
   opts.on("-s SCALE", Float, "Scale saturation") {|n| $scale_s = n}
   opts.on("-v SCALE", Float, "Scale value") {|n| $scale_v = n }
   opts.on("-n", "Don't convert back from HSV") { $output_format = :hsv }
@@ -106,8 +108,13 @@ ARGF.each_line do |ln|
   case $output_style
   when :filter
     ln.gsub!(RGB_HEX) do |rgb_hex|
-      hsv = rgb_hex_to_adjusted_hsv([$1, $2, $3])
-      fmt_rgb_hex(*hsv_to_rgb(*hsv))
+      adjusted = rgb_hex_to_adjusted_hsv([$1, $2, $3])
+      case $output_format
+      when :rgb
+        fmt_rgb_hex(*hsv_to_rgb(*adjusted))
+      when :hsv
+        fmt_hsv(*adjusted)
+      end
     end
     print ln
   when :mean
