@@ -1,0 +1,94 @@
+#!/usr/bin/env python3
+
+import sys
+import os
+import subprocess
+import i3ipc
+
+
+# okay new design!
+#
+# config is: criteria -> (focused props, unfocused props)
+#
+# tbh, the thing that goes with the flow is libconfuse a la
+#
+# systemd_unit {
+#   criteria = "instance=foo class=bar"
+#   # unit_name = "foo.service" (override, so don't need to look up _NET_WM_PID or check /proc; needed for clients which don't set)
+#   focused_properties = "whatever"
+#   unfocused_properties = "whatever else" # actually, make this a list (which in confuse can be spelled as [] or with +=)
+# }
+#
+# but we still don't have a python binding, argh. could i just do
+# good-enough with pyparsing? it's not a very complex grammar
+#
+# anyway, we can match criteria by sending a '[criteria
+# con_id=__focused__] mark --add last_unit_modified' (is that the best
+# mark name?) command and seeing if it succeds or fails. then get
+# _NET_WM_PID (fish that implementation out of reflog).
+#
+# we might as well set a last_focused mark at
+# that point (unconditially; last_unit_modified isn't set unless the
+# criteria matches and we run systemctl), for use by bindings, even
+# if it isn't strictly in scope
+
+
+def systemd_set_properties(unit, properties):
+    subprocess.run(["systemctl", "--user", "--runtime", "set-property", unit, *properties])
+
+
+def debug(s):
+    if 'DEBUG_FOCUS' in os.environ:
+        print(s, file=sys.stderr)
+
+
+class FocusWatcher:
+    def __init__(self):
+        self.i3 = i3ipc.Connection()
+        # the root con is not actually focused; we're just setting this to something
+        # that exists so we can immedately pretend we've got a regular focus change.
+        self.focused_con = self.i3.get_tree()
+        for con in self.focused_con.descendants():
+            if con.focused:
+                self.set_focused_con(con)
+            else:
+                # if we haven't run before, everything else that already exists at
+                # startup needs to have its unfocused properties set.
+                self.modify_unit(con, False)
+        self.i3.on("window::focus", self.handle_window_focus)
+        self.i3.on("workspace::focus", self.handle_workspace_focus)
+
+    def handle_window_focus(self, i3, event):
+        self.set_focused_con(event.container)
+
+    def handle_workspace_focus(self, i3, event):
+        # similar idea here as with the root: if we switched to an empty workspace,
+        # set that ws as the focused con so that we cause an normal unfocus.
+        # technically, you can put marks on a workspace, but i'm not sure what that
+        # would be useful for, since they will be ignored if the ws is not empty.
+        if event.current.find_focused() is None:
+            self.set_focused_con(event.current)
+
+    def set_focused_con(self, new_con):
+        if new_con.id != self.focused_con.id:
+            old_con = self.focused_con
+            self.focused_con = new_con
+            debug(f"focus: {old_con.window_instance or old_con.name} -> {new_con.window_instance or new_con.name}")
+            self.modify_unit(old_con, False)
+            self.modify_unit(new_con, True)
+
+    def modify_unit(self, con, focused):
+        for mark in con.marks:
+            if mark.startswith("_focus_unit:"):
+                try:
+                    _, unit, fprops, uprops = mark.split(":")
+                except ValueError:
+                    print(f"error: could not parse {mark}", file=sys.stderr)
+                    continue
+                properties = (fprops if focused else uprops).split(",")
+                debug(f"  set: {unit} {' '.join(properties)}")
+                systemd_set_properties(unit, properties)
+
+
+if __name__ == "__main__":
+    FocusWatcher().i3.main()
