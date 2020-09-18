@@ -210,3 +210,7 @@ for_window [instance=pavucontrol] floating enable
 for_window [title="Event Tester"] floating enable
 for_window [instance=ffplay] floating enable
 for_window [class=MPlayer] floating enable
+
+for_window [instance=slack] mark --add "_focus_unit:slack.service:CPUQuota=400%:CPUQuota=25%"
+for_window [instance=spotify] mark --add "_focus_unit:spotify.service:CPUQuota=400%:CPUQuota=25%"
+for_window [instance=app.wire.com] mark --add "_focus_unit:wire.service:CPUQuota=400%:CPUQuota=5%"

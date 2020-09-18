@@ -1,0 +1,7 @@
+[Unit]
+Description=Slack
+
+[Service]
+Environment=XAUTHORITY=%h/.Xauthority
+Environment=DISPLAY=:0
+ExecStart=/usr/bin/slack
