@@ -5,3 +5,4 @@ Description=Slack
 Environment=XAUTHORITY=%h/.Xauthority
 Environment=DISPLAY=:0
 ExecStart=/usr/bin/slack
+CPUQuotaPeriodSec=10ms
