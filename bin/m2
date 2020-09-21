@@ -5,11 +5,13 @@ get_m2_args() {
     rlwrap -S 'm2> ' -w 0 -H ~/.m2_history -s 10000 -D 2 -o cat
 }
 
-password="$(macguffin2 $(get_m2_args))"
+password="$(macguffin2 $(get_m2_args) | sed 's/\$/\\$/')"
 
-xdotool - <<EOF
-getactivewindow
-windowunmap
+if test -z "$TMUX"; then
+    xdotool getactivewindow windowunmap
+fi
+
+xdotool - <<EOF >/dev/null
 selectwindow
-type --window %1 $password
+type --window %1 -- "$password"
 EOF
