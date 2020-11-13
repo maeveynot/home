@@ -98,7 +98,7 @@ PROMPT_COMMAND='_check_exit $?'
 _update_vcs
 
 case "$TERM" in
-    linux|*color*)
+    alacritty|linux|*color*)
         # Basic prompt
         PS1="\${_chroot}$(_att '\u@\h' 34):$(_att '\W' 01 35) "
         # Add git branch
