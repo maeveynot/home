@@ -179,6 +179,17 @@
 (show-paren-mode)
 (add-hook 'dired-mode-hook 'toggle-truncate-lines)
 
+(defun save-mark-active (&rest r)
+  "Restore the mark's active or inactive state after calling a function.
+  Useful if you want to enable transient-mark-mode but suppress automatic
+  activation for a particular command."
+  (let ((orig-mark-active mark-active))
+    (apply r)
+    (if orig-mark-active
+        (activate-mark nil)
+      (deactivate-mark nil))))
+(advice-add 'exchange-point-and-mark :around #'save-mark-active)
+
 ;; ---------------------------------------------------------------------------
 
 (require 'which-key nil t)
