@@ -141,6 +141,8 @@
   (add-hook 'typescript-mode-hook 'dtrt-indent-mode)
   (add-hook 'css-mode-hook 'dtrt-indent-mode))
 
+(require 'json-mode nil t)
+
 (setq ruby-align-chained-calls t
       ruby-align-to-stmt-keywords t
       ruby-deep-indent-paren nil
