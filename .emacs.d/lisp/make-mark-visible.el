@@ -15,9 +15,7 @@
   "Make the mark's position stand out by means of a one-character-long overlay.
    If the value of variable `mmv-is-mark-visible' is nil, the mark will be
    invisible."
-  (unless mmv-mark-overlay
-    (setq mmv-mark-overlay (make-overlay 0 0 nil t))
-    (overlay-put mmv-mark-overlay 'face 'mmv-face))
+  (create-mmv-overlay)
   (let ((mark-position (mark t)))
     (cond
      ((null mark-position) (delete-overlay mmv-mark-overlay))
@@ -39,9 +37,21 @@
   "Toggles the mark's visiblity and redraws it (whether invisible or visible)."
   (interactive)
   (setq mmv-is-mark-visible (not mmv-is-mark-visible))
-  (if mmv-is-mark-visible
-      (set-face-attribute 'mmv-face nil :background "maroon2" :foreground "white")
-    (set-face-attribute 'mmv-face nil :background 'unspecified :foreground 'unspecified))
+  (update-mmv-face)
   (mmv-draw-mark))
+
+(defun update-mmv-face ()
+  "Updates the mark overlay face to match the mark visibility state."
+  (create-mmv-overlay)
+  (if mmv-is-mark-visible
+      (overlay-put mmv-mark-overlay 'face 'mmv-face)
+    (overlay-put mmv-mark-overlay 'face 'default)))
+
+(defun create-mmv-overlay ()
+  (unless mmv-mark-overlay
+    (setq mmv-mark-overlay (make-overlay 0 0 nil t))
+    (overlay-put mmv-mark-overlay 'face 'mmv-face)))
+
+(update-mmv-face)
 
 (global-set-key (kbd "C-c v") 'mmv-toggle-mark-visibility)
