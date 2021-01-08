@@ -1,3 +1,12 @@
 [submodule "lib/emacs/dtrt-indent"]
 	path = lib/emacs/dtrt-indent
 	url = https://github.com/jscheid/dtrt-indent
+[submodule "lib/emacs/json-mode"]
+	path = lib/emacs/json-mode
+	url = https://github.com/joshwnj/json-mode.git
+[submodule "lib/emacs/json-snatcher"]
+	path = lib/emacs/json-snatcher
+	url = https://github.com/Sterlingg/json-snatcher
+[submodule "lib/emacs/json-reformat"]
+	path = lib/emacs/json-reformat
+	url = https://github.com/gongo/json-reformat
