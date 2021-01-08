@@ -10,3 +10,6 @@
 [submodule "lib/emacs/json-reformat"]
 	path = lib/emacs/json-reformat
 	url = https://github.com/gongo/json-reformat
+[submodule "lib/emacs/rebinder"]
+	path = lib/emacs/rebinder
+	url = https://github.com/darkstego/rebinder.el
