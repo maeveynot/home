@@ -181,6 +181,10 @@
 
 ;; ---------------------------------------------------------------------------
 
+(require 'which-key nil t)
+(with-eval-after-load 'which-key
+  (which-key-mode))
+
 (load custom-file t)
 
 (add-to-list 'custom-theme-load-path custom-theme-directory)
