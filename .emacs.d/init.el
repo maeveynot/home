@@ -190,6 +190,8 @@
       (deactivate-mark nil))))
 (advice-add 'exchange-point-and-mark :around #'save-mark-active)
 
+(load "make-mark-visible")
+
 ;; ---------------------------------------------------------------------------
 
 (require 'which-key nil t)
