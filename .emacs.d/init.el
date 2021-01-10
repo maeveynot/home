@@ -198,6 +198,8 @@
 (with-eval-after-load 'which-key
   (which-key-mode))
 
+(load "rotate-text" t)
+
 (load custom-file t)
 
 (add-to-list 'custom-theme-load-path custom-theme-directory)
