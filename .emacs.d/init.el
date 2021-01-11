@@ -131,6 +131,16 @@
   (define-key markdown-mode-map (kbd "M-n") nil)
   (define-key markdown-mode-map (kbd "M-p") nil))
 
+(require 'dtrt-indent nil t)
+(with-eval-after-load 'dtrt-indent
+  (add-hook 'sh-mode-hook 'dtrt-indent-mode)
+  (add-hook 'ruby-mode-hook 'dtrt-indent-mode)
+  (add-hook 'rust-mode-hook 'dtrt-indent-mode)
+  (add-hook 'perl-mode-hook 'dtrt-indent-mode)
+  (add-hook 'js-mode-hook 'dtrt-indent-mode)
+  (add-hook 'typescript-mode-hook 'dtrt-indent-mode)
+  (add-hook 'css-mode-hook 'dtrt-indent-mode))
+
 (setq ruby-align-chained-calls t
       ruby-align-to-stmt-keywords t
       ruby-deep-indent-paren nil
