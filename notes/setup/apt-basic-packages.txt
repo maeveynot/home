@@ -1,0 +1,15 @@
+build-essential debootstrap schroot
+mksh tmux neovim rsync bc dc jq moreutils
+mlocate pwgen rlwrap sqlite3
+git diffstat colordiff
+netcat-openbsd tcpdump dnsutils whois curl
+w3m chromium
+clusterssh sysstat awscli oathtool
+ruby ruby-dev libyajl-dev libxml2-dev
+python-pip python3-pip
+xfonts-unifont
+xsel xdotool wmctrl gxmessage
+libx11-dev libxmu-dev
+gimp inkscape audacity feh gnuplot
+vlc mplayer mkvtoolnix lsdvd dvdbackup
+bsdgames fortune-mod
