@@ -34,10 +34,10 @@
 	ff = merge --ff-only
 	po = push origin
 	ph = push origin HEAD
-	pf = pull-ff-all
-	pr = pull --rebase
-	# pull and merge
-	pm = pull
+	fp = pull-ff-all
+	rp = pull --rebase
+	# merge pull
+	mp = pull
 	# ff to origin
 	fo = !git ff \"origin/$(git cb)\"
 	# list unmerged
