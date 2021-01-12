@@ -1,0 +1,6 @@
+#!/bin/bash
+
+"$@"
+printf '\e[6n'
+read -sdR pos
+test "${pos#*;}" -eq 1 || echo
