@@ -1,0 +1,12 @@
+"\C-w": kill-region
+"\ew": copy-region-as-kill
+
+# "\C-v": yank
+# "\ev": yank-pop
+# "\C-y":
+# "\ey":
+
+"\C-x[": start-kbd-macro
+"\C-x]": end-kbd-macro
+
+set blink-matching-paren on
