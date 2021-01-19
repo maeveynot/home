@@ -12,24 +12,20 @@
   "The overlay is visible only when this variable's value is t.")
 
 (defun mmv-draw-mark (&rest _)
-  "Make the mark's position stand out by means of a one-character-long overlay.
+  "Make the mark's position stand out by means of an overlay.
    If the value of variable `mmv-is-mark-visible' is nil, the mark will be
    invisible."
   (create-mmv-overlay)
   (let ((mark-position (mark t)))
-    (cond
-     ((null mark-position) (delete-overlay mmv-mark-overlay))
-     ((and (< mark-position (point-max))
-           (not (eq ?\n (char-after mark-position))))
-      (overlay-put mmv-mark-overlay 'after-string nil)
-      (move-overlay mmv-mark-overlay mark-position (1+ mark-position)))
-     (t
-      ; This branch is called when the mark is at the end of a line or at the
-      ; end of the buffer. We use a bit of trickery to avoid the higlight
-      ; extending from the mark all the way to the right end of the frame.
-      (overlay-put mmv-mark-overlay 'after-string
-                   (propertize " " 'face (overlay-get mmv-mark-overlay 'face)))
-      (move-overlay mmv-mark-overlay mark-position mark-position)))))
+    (if (null mark-position)
+        (delete-overlay mmv-mark-overlay)
+      (let* ((mmv-raw-string (cond ((> mark-position (buffer-size)) "^D")
+                                   ((eq ?\n (char-after mark-position)) "^M")))
+             (mmv-display-string (if mmv-raw-string
+                                     (propertize mmv-raw-string 'face (overlay-get mmv-mark-overlay 'face))))
+             (mmv-position (+ mark-position (if mmv-display-string 0 1))))
+        (overlay-put mmv-mark-overlay 'after-string mmv-display-string)
+        (move-overlay mmv-mark-overlay mark-position mmv-position)))))
 
 (add-hook 'pre-redisplay-functions #'mmv-draw-mark)
 
