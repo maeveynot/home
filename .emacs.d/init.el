@@ -104,6 +104,8 @@
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
 
+(defalias 'yes-or-no-p 'y-or-n-p)
+
 ;; ---------------------------------------------------------------------------
 
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
