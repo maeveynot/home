@@ -234,6 +234,8 @@
 (show-paren-mode)
 (add-hook 'dired-mode-hook 'toggle-truncate-lines)
 
+;; Make activation an explicit command
+
 (defun save-mark-active (&rest r)
   "Restore the mark's active or inactive state after calling a function.
   Useful if you want to enable transient-mark-mode but suppress automatic
@@ -246,6 +248,34 @@
 (advice-add 'exchange-point-and-mark :around #'save-mark-active)
 
 (load "make-mark-visible")
+
+;; Doesn't move point
+
+(defun toggle-mark-active ()
+  (interactive)
+  (if mark-active
+      (deactivate-mark nil)
+    (activate-mark nil)))
+
+;; https://masteringemacs.org/article/fixing-mark-commands-transient-mark-mode
+;; but instead bind it to a similar key to pop-global-mark.
+
+(defun jump-to-mark ()
+  "Jumps to the local mark, respecting the `mark-ring' order.
+  This is the same as using \\[set-mark-command] with the prefix argument."
+  (interactive)
+  (set-mark-command 1))
+
+;; so now
+(global-set-key (kbd "C-x SPC")   'toggle-mark-active)
+(global-set-key (kbd "C-x C-SPC") 'jump-to-mark)
+(global-set-key (kbd "C-x C-SPC") 'pop-global-mark)
+;; which bumps
+(global-set-key (kbd "C-x r h")   'rectangle-mark-mode)
+;; and suggests some symmetry
+(global-set-key (kbd "C-x r SPC") 'jump-to-register)
+;; also a single letter for this would be nice
+(global-set-key (kbd "C-x r p")   'point-to-register)
 
 ;; ---------------------------------------------------------------------------
 
