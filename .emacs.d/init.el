@@ -18,7 +18,7 @@
 (setq
  inhibit-startup-screen t
  initial-major-mode 'text-mode
- initial-scratch-message (format-time-string "# Started at %F %T\n\n")
+ initial-scratch-message ""
  echo-keystrokes (/ 1.0 6)
  use-dialog-box nil
  scroll-preserve-screen-position t
@@ -173,6 +173,24 @@
 ;; what i want is fill column set to the longest line
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 (add-hook 'text-mode-hook 'turn-on-flyspell)
+
+;; ---------------------------------------------------------------------------
+
+(defun offer-save-no-file ()
+  (if (and (or buffer-offer-save (interactive-p))
+           (buffer-modified-p)
+           (not (buffer-file-name)))
+      (yes-or-no-p (format "Buffer %s modified; close anyway? " (buffer-name)))
+    t))
+(add-to-list 'kill-buffer-query-functions 'offer-save-no-file)
+
+;; okay but i want this to default t on all scratch buffers not just the
+;; first one
+
+(defun scratch-offer-save ()
+  (with-current-buffer "*scratch*"
+    (setq buffer-offer-save t)))
+(add-hook 'after-init-hook 'scratch-offer-save)
 
 ;; ---------------------------------------------------------------------------
 
