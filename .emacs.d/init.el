@@ -47,12 +47,6 @@
 (global-set-key (kbd "M-n") 'scroll-up)
 (global-set-key (kbd "M-p") 'scroll-down)
 
-;; ; i wonder if i can train myself to do this
-;; (global-set-key (kbd "C-v") 'yank)
-;; (global-set-key (kbd "M-v") 'yank-pop)
-;; (global-unset-key (kbd "C-y"))
-;; (global-unset-key (kbd "M-y"))
-
 (global-set-key (kbd "<C-up>") 'scroll-down-line)
 (global-set-key (kbd "<C-down>") 'scroll-up-line)
 
@@ -292,3 +286,77 @@
 (add-to-list 'custom-theme-load-path custom-theme-directory)
 
 (load "local-init" t)
+
+;; ---------------------------------------------------------------------------
+
+;; Yes this is absolutely deranged. Just doing the simple thing won't
+;; work for C-c, need rebinder or equivalent. Unfortunately, rebinder
+;; totally breaks binding self-documentation: C-c sequences no longer
+;; show up in describe-bindings, which-key, or C-q C-h. It looks like
+;; the full wakib does something smarter, so I probably want to start
+;; hacking there.
+
+(require 'rebinder nil t)
+(with-eval-after-load 'rebinder
+  (rebinder-hook-to-mode 't 'after-change-major-mode-hook)
+  (define-key global-map (kbd "C-o") (rebinder-dynamic-binding "C-x"))
+  (define-key global-map (kbd "C-q") (rebinder-dynamic-binding "C-c")))
+
+;; Before we get to the good part: open-line and quoted-insert were
+;; bumped, and exchange-point-and-mark should be the same key twice.
+
+(global-set-key (kbd "M-RET")     'open-line)
+; note that all C-o bindings are still spelled C-x so rebinder can translate
+(global-set-key (kbd "C-x 7")     'quoted-insert)
+(global-set-key (kbd "C-x C-o")   'exchange-point-and-mark)
+(global-set-key (kbd "C-x M-DEL") 'delete-blank-lines)
+
+;; In addition to C-x and C-c, free up C-v.
+
+(global-set-key (kbd "M-n") 'scroll-up)
+(global-set-key (kbd "M-p") 'scroll-down)
+
+;; Now we can add CUA stuff.
+
+(with-eval-after-load 'rebinder
+  (define-key rebinder-mode-map (kbd "C-x") 'kill-region)
+  (define-key rebinder-mode-map (kbd "C-c") 'kill-ring-save))
+(global-set-key (kbd "C-v") 'yank)
+(global-set-key (kbd "M-v") 'yank-pop)
+(global-set-key (kbd "C-w") 'kill-this-buffer)
+(global-set-key (kbd "C-z") 'undo)
+(global-set-key (kbd "C-y") nil)
+
+;; Quit will will still be two keys to avoid accidental exits. This
+;; bumps find-file-read-only but that can be done with find-file and
+;; then read-only-mode so it doesn't really need its own thing.
+
+(global-set-key (kbd "C-x C-q") 'save-buffers-kill-terminal)
+(global-set-key (kbd "C-x C-r") 'read-only-mode)
+
+;; We've moved undo, and can have this GTK+ thing.
+
+(global-set-key (kbd "C-/") 'mark-whole-buffer)
+(global-set-key (kbd "C-_") 'mark-whole-buffer)
+
+;; Shuffle the register/rectangle prefix key metaphors to match.
+
+(global-set-key (kbd "C-x r k") 'clear-rectangle) ; klear
+(global-set-key (kbd "C-x r x") 'kill-rectangle)
+(global-set-key (kbd "C-x r c") 'copy-rectangle-as-kill)
+(global-set-key (kbd "C-x r v") 'yank-rectangle)
+(global-set-key (kbd "C-x r y") nil)
+
+;; if we don't have it, best effort
+
+(unless (fboundp 'rebinder)
+  (global-set-key (kbd "C-x") 'kill-region)
+  (global-set-key (kbd "C-c") 'kill-ring-save)
+  (define-key global-map (kbd "C-o") 'Control-X-prefix)
+  (global-set-key        (kbd "C-q") 'mode-specific-command-prefix))
+
+;; I've grabbed C-z (see below) for tmux, and I don't use Emacs input-methods.
+;; This key is pretty far, away so good for something you only do on its own
+;; and not as part of a complex command or mixed with other commands.
+
+(global-set-key (kbd "C-\\") 'undo)
