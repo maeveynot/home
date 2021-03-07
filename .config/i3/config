@@ -6,10 +6,14 @@ floating_modifier $mod
 workspace_layout default
 focus_wrapping yes
 
+set $def_bd pixel 6
+set $flt_bd pixel 2
 set $font pango:Ubuntu 9
-set $bs 2
-default_border pixel $bs
-hide_edge_borders smart
+
+default_border $def_bd
+default_floating_border $flt_bd
+hide_edge_borders both
+font $font
 
 # Do not bind:
 # - $mod+c (is reserved for user bindings)
@@ -25,13 +29,9 @@ hide_edge_borders smart
 
 bindsym $mod+h split h
 bindsym $mod+v split v
-# if there's only one con in a ws and i switch to tabbed or stacking, i
-# want the tabs to show up *before* i create a second con. this means we
-# have to keep track of which con got a special border to undo it later.
-# (hmm, maybe i no longer need this with con path in i3bifocals title)
-bindsym $mod+l layout toggle split; [con_mark=__border] border pixel $bs; unmark __border
-bindsym $mod+t layout tabbed; border normal $bs; mark __border
-bindsym $mod+s layout stacking; border normal $bs; mark __border
+bindsym $mod+l layout toggle split
+bindsym $mod+t layout tabbed
+bindsym $mod+s layout stacking
 
 bindsym $mod+n focus down
 bindsym $mod+p focus up
@@ -53,7 +53,7 @@ bindsym $mod+shift+Right focus right
 
 bindsym $mod+slash focus mode_toggle
 bindsym $mod+apostrophe floating toggle
-bindsym $mod+comma border toggle $bs
+bindsym $mod+comma border toggle
 bindsym $mod+period sticky toggle
 
 bindsym $mod+minus resize shrink height 24 px or 4 ppt
@@ -205,11 +205,11 @@ bindsym XF86AudioLowerVolume exec --no-startup-id "i3volume 5%-"
 bindsym XF86AudioRaiseVolume exec --no-startup-id "i3volume 5%+"
 bindsym XF86AudioMute exec --no-startup-id "i3volume toggle"
 
-for_window [instance=PasswordEntry] floating enable, border pixel $bs, move position center
-for_window [instance=pavucontrol] floating enable
-for_window [title="Event Tester"] floating enable
-for_window [instance=ffplay] floating enable
-for_window [class=MPlayer] floating enable
+for_window [instance=PasswordEntry] floating enable, border $flt_bd, move position center
+for_window [instance=pavucontrol] floating enable, border $flt_bd
+for_window [title="Event Tester"] floating enable, border $flt_bd
+for_window [instance=ffplay] floating enable, border $flt_bd
+for_window [class=MPlayer] floating enable, border $flt_bd
 
 for_window [instance=slack] mark --add "_focus_unit:slack.service:CPUQuota=400%:CPUQuota=25%"
 for_window [instance=spotify] mark --add "_focus_unit:spotify.service:CPUQuota=400%:CPUQuota=25%"
