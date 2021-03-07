@@ -191,8 +191,11 @@
 ;; ---------------------------------------------------------------------------
 
 (setq frame-title-format
-      `(,(invocation-name) "@" ,(system-name) ": %["
-        (buffer-file-name "%f" (dired-directory dired-directory "%b"))
+      `(,(invocation-name)
+        ": %["
+        (buffer-file-name (:eval (abbreviate-file-name (buffer-file-name)))
+                          (dired-directory dired-directory
+                                           "%b"))
         "%] %*"))
 
 ;; i couldn't get either term/xterm.el or the xterm-title.el on
