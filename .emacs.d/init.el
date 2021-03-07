@@ -213,8 +213,15 @@
 ;; this trades being always 100% up to date for efficiency
 ;; TODO: find a hook that will run on entering/exiting recursive edit
 
-(add-hook 'buffer-list-update-hook 'xterm-title-update)
-(add-hook 'first-change-hook 'xterm-title-update)
+(defun on-after-init ()
+  (let ((frame (selected-frame)))
+  (unless (display-graphic-p frame)
+    (set-face-foreground 'default "unspecified-fg" frame)
+    (set-face-background 'default "unspecified-bg" frame)
+    (add-hook 'buffer-list-update-hook 'xterm-title-update)
+    (add-hook 'first-change-hook 'xterm-title-update))))
+
+(add-hook 'window-setup-hook 'on-after-init)
 
 ;; ---------------------------------------------------------------------------
 
