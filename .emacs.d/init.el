@@ -253,7 +253,7 @@
       (deactivate-mark nil))))
 (advice-add 'exchange-point-and-mark :around #'save-mark-active)
 
-(load "make-mark-visible")
+(load "make-mark-visible" t)
 
 ;; Doesn't move point
 
