@@ -8,4 +8,4 @@
 # Allow using `export TTY=$(tty)` in shell init as a workaround.
 
 test -n "$TTY" && exec <"$TTY" >"$TTY"
-exec emacsclient -c -a '' "$@"
+exec emacsclient -t -c -a '' "$@"
