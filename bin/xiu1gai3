@@ -1,0 +1,79 @@
+#!/usr/bin/python3
+
+import sys
+import argparse
+import i3ipc
+from itertools import takewhile
+
+
+class Xiu1gai3:
+    EVENTS = (
+        "workspace::focus",
+        "window::focus",
+        "window::title",
+        "window::close",
+    )
+
+    def __init__(self, max_chars):
+        self.i3 = i3ipc.Connection(auto_reconnect=True)
+        self.max_chars = max_chars
+
+    def run(self):
+        self.update_workspaces(self.i3, None)
+        for e in self.EVENTS:
+            self.i3.on(e, self.update_workspaces)
+        self.i3.main()
+
+    def update_workspaces(self, i3, event):
+        root = self.i3.get_tree()
+        workspaces = root.workspaces()
+        for ws in workspaces:
+            new_ws_name = self.format_name(ws)
+            if new_ws_name != ws.name:
+                self.rename_workspace(ws.name, new_ws_name)
+
+    def format_name(self, workspace):
+        number = "".join(takewhile(str.isdigit, workspace.name))
+        if not number:
+            return workspace.name
+        active = find_focused_or_active(workspace)
+        if active == workspace:
+            name = "<i>(empty workspace)</i>"
+        else:
+            name = pango_escape(active.name, self.max_chars)
+        return f"{number}: {name}"
+
+    def rename_workspace(self, old, new):
+        self.i3.command(f"rename workspace {ipc_quote(old)} to {ipc_quote(new)}")
+
+
+def find_focused_or_active(con):
+    try:
+        while con.focus:
+            con = next(c for c in con if c.id == con.focus[0])
+    except StopIteration:
+        pass
+    return con
+
+
+def pango_escape(s, max_len=None):
+    if max_len and len(s) > max_len:
+        s = s[:max_len] + "…"
+    s = s.replace("&", "&amp;")
+    s = s.replace("<", "&lt;")
+    s = s.replace(">", "&gt;")
+    return s
+
+
+def ipc_quote(s):
+    return '"' + s.replace('"', '\\"') + '"'
+
+
+if __name__ == "__main__":
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--max-chars", "-m", type=int, default=60)
+    args = ap.parse_args()
+    try:
+        Xiu1gai3(args.max_chars).run()
+    except (KeyboardInterrupt, SystemExit):
+        sys.exit(1)
