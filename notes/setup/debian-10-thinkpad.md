@@ -16,6 +16,9 @@ installed, so to tidy things up you can run:
     sudo apt remove --purge cryptsetup
     sudo apt-mark manual cryptsetup-run cryptsetup-initramfs
 
+BUT! In 11 cryptsetup is the real thing again and cryptsetup-run is the
+dummy.
+
 # Firmware
 
 Install the `firmware-linux-nonfree` package.
