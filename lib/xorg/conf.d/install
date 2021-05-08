@@ -1,6 +1,6 @@
 #!/bin/sh
 
-dest='/usr/share/X11/xorg.conf.d'
+dest='/etc/X11/xorg.conf.d'
 
 for conf in *.conf; do
     if ! [ -L "$dest/$conf" ]; then
